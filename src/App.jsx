@@ -1,56 +1,52 @@
-import { useState } from 'react'
-//import reactLogo from './assets/react.svg'
-//import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import './App.css';
 
-function App() {
-  // Todo itemları için state
-  const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState('');
+const App = () => {
+  const [task, setTask] = useState('');
+  const [tasks, setTasks] = useState([]);
 
-  // Yeni todo ekleme fonksiyonu
-  const addTodo = () => {
-    if (newTodo.trim() !== '') {
-      setTodos([...todos, { text: newTodo, id: Date.now(), completed: false }]);
-      setNewTodo(''); // inputu temizle
+  const handleAddTask = () => {
+    if (task.trim()) {
+      setTasks([...tasks, task]);
+      setTask('');
     }
   };
 
-  // Todo'yu tamamla
-  const toggleComplete = (id) => {
-    setTodos(todos.map(todo => 
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
-  };
-
-  // Todo'yu silme fonksiyonu
-  const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+  const handleDeleteTask = (index) => {
+    setTasks(tasks.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="App">
-      <h1>To-Do List</h1>
-      <div className="todo-input">
-        <input 
-          type="text" 
-          value={newTodo} 
-          onChange={(e) => setNewTodo(e.target.value)} 
-          placeholder="Yeni görev ekle..." 
+    <div className="container">
+      <div className="left-side">
+        <h2>Yeni Görev Ekle</h2>
+        <input
+          type="text"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          placeholder="Görev girin"
         />
-        <button onClick={addTodo}>Ekle</button>
+        <button onClick={handleAddTask}>Ekle</button>
       </div>
-
-      <ul className="todo-list">
-        {todos.map(todo => (
-          <li key={todo.id} className={todo.completed ? 'completed' : ''}>
-            <span onClick={() => toggleComplete(todo.id)}>{todo.text}</span>
-            <button onClick={() => deleteTodo(todo.id)}>Sil</button>
-          </li>
-        ))}
-      </ul>
+      
+      {/* Orta çizgi */}
+      <div className="line"></div>
+      
+      <div className="right-side">
+        <h2>Görev Listesi</h2>
+        <ul>
+          {tasks.map((task, index) => (
+            <li key={index} className="task-item">
+              {task}
+              <button onClick={() => handleDeleteTask(index)} className="delete-btn">
+                Sil
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
